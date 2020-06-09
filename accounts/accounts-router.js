@@ -1,24 +1,25 @@
 const express = require("express");
 
-const db = require("../data/dbConfig");
+const knex = require("../data/dbConfig");
 
 const router = express.Router();
 
 // getting all accounts 
 router.get("/", (req, res) => {
-    db
+    knex
     .select()
     .from("accounts")
-    .then(account=>{
+    .then(account => {
         res.json(account)
     })
-    .catch(err=>{
+    .catch(err => {
         res.status(500).json({ message: "error", err })
-    })
-})
+    });
+});
 // getting account by  id
 router.get("/:id", (req, res) => {
-    db('accounts')
+    knex
+    ('accounts')
     .where({id:req.params.id})
     .first()
     .then(post => {
@@ -30,26 +31,26 @@ router.get("/:id", (req, res) => {
     })
     .catch(error => {
         res.status(500).json({ message: "Error" })
-    })
-})
+    });
+});
 // posting a account
 router.post("/", (req, res) => {
     const postData = req.body;
-    db("accounts")
+    knex("accounts")
     .insert(postData)
     .then(post => {
         res.status(201).json(post)
     })
     .catch(err => {
-        res.status(500).json({ message: "cannot create" })
-    })
-})
-// updating a account ids
+        res.status(500).json({ message: "cannot create" });
+    });
+});
+// updating a account id
 router.put("/:id", (req, res) => {
-    const { id }=req.params
-    const changes=req.body
+    const { id } = req.params
+    const changes = req.body
 
-    db("accounts")
+    knex("accounts")
     .where({id})
     .update(changes)
     .then(count => {
@@ -65,12 +66,12 @@ router.put("/:id", (req, res) => {
 });
 // deleting a account id
 router.delete("/:id", (req, res) => {
-    const { id }= req.params
-    db("accounts")
+    const { id } = req.params
+    knex("accounts")
     .where ({id})
     .del({id})
     .then(deleted => {
-        res.status(200).json(deleted)
+        res.status(200).json(deleted);
     })
     .catch(err => {
             res.status(500).json({ message: "cannot delete" });
